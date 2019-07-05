@@ -1,7 +1,7 @@
 #' PLS estimation by the iterative algorithm via Rmosek
 #'
-#' @param N
-#' @param TT
+#' @param N individual dimension
+#' @param TT time dimension
 #' @param y y(TN * 1)
 #' @param X X(TN * P)
 #' @param K number of groups
@@ -9,29 +9,16 @@
 #' @param R Maximum # of iteration
 #' @param tol convergence criterion
 #'
-#' export
+#' @return A list contains estimated coeffcients and group struncture
+#' \item{b.est}{N * p matrix containing estimated slope for each individual}
+#' \item{a.out}{K * p matrix containing estimated slope for each group}
+#' \item{group.est}{group_id for each individual}
+#' \item{converge}{A boolean indicating whether convergence criteria is met }
+#'
+#' @export
 #'
 #'
 PLS.mosek <- function(N, TT, y, X, K, lambda, R, tol = 1e-4){
-
-    # library("Rmosek")
-    # library("SparseM")
-    # library("Matrix")
-
-    # PLS estimation by the iterative algorithm
-
-    # INPUT Arg:
-    #   dimensions N, TT
-    #   data y(TN * 1), X(TN * P)
-    #   tuning parameter lambda
-    #   maximum number of iteration R
-
-    # OUTPUT:
-    #   b_est: estimated beta (N*p)
-    #   a_out: estimated alpha (K*p)
-    #   group_est: estimated group identity (N*1)
-    #   converge(boolean: converge or not)
-
 
     p <- dim(X)[2];
 
@@ -105,22 +92,21 @@ PLS.mosek <- function(N, TT, y, X, K, lambda, R, tol = 1e-4){
 }
 
 #' PLS estimation by the iterative algorithm via CVXR
-
+#'
+#' @inheritParams PLS.mosek
+#' @param solver "ECOS" or "MOSEK"
+#'
+#' @return A list contains estimated coeffcients and group struncture
+#' \item{b.est}{N * p matrix containing estimated slope for each individual}
+#' \item{a.out}{K * p matrix containing estimated slope for each group}
+#' \item{group.est}{group_id for each individual}
+#' \item{converge}{A boolean indicating whether convergence criteria is met }
+#'
+#' @export
+#'
 
 
 PLS.cvxr <- function(N, TT, y, X, K, lambda, R, tol = 1e-4, solver = "ECOS"){
-
-    # INPUT Arg:
-    #   dimensions N, TT
-    #   data y(TN * 1), X(TN * P)
-    #   tuning parameter lambda
-    #   maximum number of iteration R
-
-    # OUTPUT:
-    #   b_est: estimated beta (N*p)
-    #   a_out: estimated alpha (K*p)
-    #   group_est: estimated group identity (N*1)
-
 
     p <- dim(X)[2];
 
@@ -224,7 +210,7 @@ PLS.cvxr <- function(N, TT, y, X, K, lambda, R, tol = 1e-4, solver = "ECOS"){
     }
 
     result <- list( b.est = b.est, a.out = a.out,
-                    group.est = group.est );
+                    group.est = group.est, converge = (r < R));
 
     return(result)
 }

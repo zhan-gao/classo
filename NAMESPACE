@@ -2,3 +2,8 @@
 
 export(PLS.cvxr)
 export(PLS.mosek)
+export(SPJ_PLS)
+export(data.normalization)
+export(demean)
+export(group.coerce)
+export(init_est)

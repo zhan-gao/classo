@@ -1,3 +1,6 @@
+#' @export group.coerce
+#' @export data.normalization
+#' @export demean
 group.coerce <- function(group.est, a.out, group0, a0, N, N.frac, K, p){
 
     a.est <- matrix(0,K,p);
@@ -67,16 +70,34 @@ data.normalization <- function(yy, N, TT){
     p <- dim(yy)[2];
 
     if( p == 1){
-        y.temp <- robustHD::standardize( matrix(yy, nrow = TT) );
-        y <- matrix(y.temp, nrow = N*TT)
-        return(y)
+        y.temp <- robustHD::standardize( matrix(yy, nrow = TT),
+                                         scaleFun = function(x) {
+                                             sqrt(sum((x - mean(x)) ^ 2) / length(x))
+                                         })
+        y.mean <- matrix( rep( colMeans( matrix(yy, nrow = TT)), TT), nrow = TT, byrow = TRUE)
+        y.raw.temp <- y.temp + y.mean
+
+        y <- matrix(y.temp, nrow = N * TT)
+        y.raw <- matrix(y.raw.temp, nrow = N*TT)
+
     }
     else{
         y <- matrix(0, N*TT, p);
+        y.raw <- matrix(0, N*TT, p);
         for(j in 1:p){
-            y.temp <- robustHD::standardize( matrix( yy[,j], nrow = TT) );
-            y[,j] <- matrix(y.temp, nrow = N*TT);
+            y.temp <- robustHD::standardize( matrix(yy[, j], nrow = TT),
+                                             scaleFun = function(x) {
+                                                 sqrt(sum((x - mean(x)) ^ 2) / length(x))
+                                             })
+
+            y.mean <- matrix( rep(colMeans( matrix(yy[, j], nrow = TT)), TT), nrow = TT, byrow = TRUE)
+            y.raw.temp <- y.temp + y.mean
+
+            y[, j] <- matrix(y.temp, nrow = N * TT)
+            y.raw[, j] <- matrix(y.raw.temp, nrow = N*TT)
+
         }
-        return(y)
     }
+
+    return(list(y = y, y.raw = y.raw))
 }

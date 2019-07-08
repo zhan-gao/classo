@@ -22,6 +22,8 @@ PLS.mosek(N, TT, y, X, K, lambda, R, tol = 1e-04)
 \item{R}{Maximum # of iteration}
 
 \item{tol}{convergence criterion}
+
+\item{beta0}{N*p matrix. initial estimator}
 }
 \value{
 A list contains estimated coeffcients and group struncture

@@ -6,6 +6,7 @@
 #' @param X X(TN * P)
 #' @param K number of groups
 #' @param lambda Tuning variable
+#' @param beta0 N*p matrix. initial estimator
 #' @param R Maximum # of iteration
 #' @param tol convergence criterion
 #'
@@ -18,20 +19,14 @@
 #' @export
 #'
 #'
-PLS.mosek <- function(N, TT, y, X, K, lambda, R, tol = 1e-4){
+PLS.mosek <- function(N, TT, y, X, K, lambda, beta0, R, tol = 1e-4){
 
     p <- dim(X)[2];
 
-    # Use individual regression result as the initial value
-    beta0 = matrix(0, N, p);
-    for(i in 1:N){
-        ind <- ( (i-1)*TT+1 ):(i*TT);
-        yy <- y[ind, ]
-        XX <- X[ind, ]
-        beta0[i, ] <- solve( t(XX) %*% XX ) %*% ( t(XX) %*% yy );
+    if(is.null(beta0)){
+        # Use individual regression result as the initial value
+        beta0 <- init_est(X, y, TT)
     }
-
-
 
     b.out <- array( beta0, c(N,p,K) );
     a.out <- matrix(0,K,p);
@@ -106,20 +101,15 @@ PLS.mosek <- function(N, TT, y, X, K, lambda, R, tol = 1e-4){
 #'
 
 
-PLS.cvxr <- function(N, TT, y, X, K, lambda, R, tol = 1e-4, solver = "ECOS"){
+PLS.cvxr <- function(N, TT, y, X, K, lambda, beta0, R, tol = 1e-4, solver = "ECOS"){
 
     p <- dim(X)[2];
 
-    # Use individual regression result as the initial value
-    beta0 = matrix(0, N, p);
-    for(i in 1:N){
-        ind <- ( (i-1)*TT+1 ):(i*TT);
-        yy <- y[ind, ]
-        XX <- X[ind, ]
-        beta0[i, ] <- solve( t(XX) %*% XX ) %*% ( t(XX) %*% yy );
+
+    if(is.null(beta0)){
+        # Use individual regression result as the initial value
+        beta0 <- init_est(X, y, TT)
     }
-
-
 
     b.out <- array( beta0, c(N,p,K) );
     a.out <- matrix(0,K,p);
@@ -130,8 +120,6 @@ PLS.cvxr <- function(N, TT, y, X, K, lambda, R, tol = 1e-4, solver = "ECOS"){
     for(r in 1:R){
 
         for(k in 1:K){
-
-            # print(c(r,k))
 
             # N * 1: consider it as gamma
             gamma <- pen.generate(b.out, a.out, N, p, K, k)
@@ -228,7 +216,7 @@ pen.generate <- function(b, a, N, p, K, kk){
 
     ind <- setdiff(1:K,kk);
 
-    pen <- apply(p.norm[, ind], 1, prod);
+    pen <- apply(as.matrix(p.norm[, ind]), 1, prod);
     return(pen)
 
 }

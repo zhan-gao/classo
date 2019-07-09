@@ -15,9 +15,14 @@ The package is still under active development...
 
 ## Installation
 
+This package is dependent on [Rmosek](https://cran.r-project.org/web/packages/Rmosek/index.html). An installation gist can be found at https://gist.github.com/mikelove/67ea44d5be5a053e599257fe357483dc . Please make sure `Rmosek` is successfully installed and activated before install this package.
+
+In later versions, we will relax this restriction to allow users use an open source solver via [CVXR](https://github.com/anqif/CVXR) and make `Rmosek` as an option.
+
 You can install the development version of classo from [Github](https://CRAN.R-project.org) with:
 
 ``` r
 library(devtools)
-install_github("zhan-gao/classo")
+devtools::install_github("zhan-gao/classo", INSTALL_opts=c("--no-multiarch"))
 ```
+

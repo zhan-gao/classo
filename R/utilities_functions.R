@@ -1,4 +1,3 @@
-#' @export group.coerce
 #' @export data.normalization
 #' @export demean
 group.coerce <- function(group.est, a.out, group0, a0, N, N.frac, K, p){

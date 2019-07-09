@@ -36,7 +36,8 @@ SPJ_PLS <- function(t, y, x){
         y_demean <- demean(y_half, n, t_half)
         x_demean <- demean(x_half, n, t_half)
 
-        b <- lsfit(x_demean, y_demean, intercept = FALSE)$coefficients
+        # b <- lsfit(x_demean, y_demean, intercept = FALSE)$coefficients
+        b <- solve( t(x_demean) %*% x_demean ) %*% ( t(x_demean) %*% y_demean )
         theta_bar[, tt] <- b
 
     }

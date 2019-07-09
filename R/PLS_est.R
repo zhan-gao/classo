@@ -19,9 +19,21 @@
 #' @export
 #'
 #'
-PLS.mosek <- function(N, TT, y, X, K, lambda, beta0, R, tol = 1e-4){
 
-    p <- dim(X)[2];
+PLS.mosek <- function(N,
+                      TT,
+                      y,
+                      X,
+                      K,
+                      lambda,
+                      beta0 = NULL,
+                      R = 500,
+                      tol = 1e-4,
+                      post_est = TRUE,
+                      bias_corr = TRUE) {
+
+    p <- dim(X)[2]
+
 
     if(is.null(beta0)){
         # Use individual regression result as the initial value
@@ -68,11 +80,14 @@ PLS.mosek <- function(N, TT, y, X, K, lambda, beta0, R, tol = 1e-4){
     group.est <- apply(dist,1,which.min);
 
 
-    if( sum( as.numeric( table(group.est) ) > p ) == K ){
-        # Post-Lasso estimation
-        a.out <- post.lasso( group.est, y, X, K, p, N, TT );
+    # Post estimation
+    if(post_est){
+        if(bias_corr){
+            a.out <- post.corr(group.est, a.out, y, X, K, p, N, TT)
+        } else {
+            a.out <- post.lasso(group.est, a.out, y, X, K, p, N, TT)
+        }
     }
-
 
     b.est <- matrix(999, N, p);
     for(i in 1:N){
@@ -100,11 +115,20 @@ PLS.mosek <- function(N, TT, y, X, K, lambda, beta0, R, tol = 1e-4){
 #' @export
 #'
 
+PLS.cvxr <- function(N,
+                     TT,
+                     y,
+                     X,
+                     K,
+                     lambda,
+                     beta0 = NULL,
+                     R = 500,
+                     tol = 1e-4,
+                     solver = "ECOS",
+                     post_est = TRUE,
+                     bias_corr = TRUE) {
 
-PLS.cvxr <- function(N, TT, y, X, K, lambda, beta0, R, tol = 1e-4, solver = "ECOS"){
-
-    p <- dim(X)[2];
-
+    p <- dim(X)[2]
 
     if(is.null(beta0)){
         # Use individual regression result as the initial value
@@ -185,9 +209,13 @@ PLS.cvxr <- function(N, TT, y, X, K, lambda, beta0, R, tol = 1e-4, solver = "ECO
     group.est <- apply(dist,1,which.min);
 
 
-    if( sum( as.numeric( table(group.est) ) > p ) == K ){
-        # Post-Lasso estimation
-        a.out <- post.lasso( group.est, y, X, K, p, N, TT );
+    # Post estimation
+    if(post_est){
+        if(bias_corr){
+            a.out <- post.corr(group.est, a.out, y, X, K, p, N, TT)
+        } else {
+            a.out <- post.lasso(group.est, a.out, y, X, K, p, N, TT)
+        }
     }
 
 
@@ -220,6 +248,7 @@ pen.generate <- function(b, a, N, p, K, kk){
     return(pen)
 
 }
+
 
 ##########################################################
 opt.mosek <- function(y, X, penalty, N, TT, K, p, lambda){
@@ -326,20 +355,59 @@ criterion <- function( a.old, a.new, b.old, b.new, tol ){
 }
 
 ##########################################################
-post.lasso <- function( group.est, y, X,  K, p, N, TT ){
+post.lasso <- function( group.est, a.out, y, X,  K, p, N, TT ){
 
-    a.out <- matrix(0,K,p);
+    a.out.post <- matrix(0,K,p)
 
     for( k in 1:K ){
-        Ind <- 1:N; group.ind <- Ind[group.est == k];
-        data.ind <- as.numeric( sapply(group.ind, extend.ind) );
-        yy <- y[data.ind,];
-        XX <- X[data.ind,];
 
-        a.out[k, ] <- solve( t(XX) %*% XX ) %*% ( t(XX) %*% yy );
+        group_k <- (group.est == k)
+
+        if(sum(group_k) >= p/TT){
+
+            Ind <- 1:N
+            group.ind <- Ind[group.est == k]
+
+            data.ind <- as.numeric( sapply(group.ind, extend.ind) )
+            yy <- y[data.ind, ]
+            XX <- X[data.ind, ]
+
+            a.out.post[k, ] <- lsfit(XX, yy, intercept = FALSE)$coefficients
+
+        } else {
+            a.out.post[k, ] <- a.out[k, ]
+        }
     }
-    return(a.out)
+    return(a.out.post)
 }
+
+##########################################################
+post.corr <- function( group.est, a.out, y, X,  K, p, N, TT ){
+
+    a.out.corr <- matrix(0,K,p);
+
+    for( k in 1:K ){
+
+        group_k <- (group.est == k)
+
+        if(sum(group_k) >= 2*p/TT){
+            Ind <- 1:N
+            group.ind <- Ind[group.est == k]
+
+            data.ind <- as.numeric( sapply(group.ind, extend.ind) );
+            yy <- y[data.ind,];
+            XX <- X[data.ind,];
+
+            bias.k <- SPJ_PLS(TT, yy, XX)
+            a.k <- lsfit(XX, yy, intercept = FALSE)$coefficients
+            a.out.corr[k, ] <- 2*a.k - bias.k
+        } else {
+            a.out.corr[k, ] <- a.out[k, ]
+        }
+    }
+    return(a.out.corr)
+}
+
 
 extend.ind <- function(i){
     return( ((i-1)*TT+1):(i*TT) );

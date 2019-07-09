@@ -4,7 +4,8 @@
 \alias{PLS.mosek}
 \title{PLS estimation by the iterative algorithm via Rmosek}
 \usage{
-PLS.mosek(N, TT, y, X, K, lambda, R, tol = 1e-04)
+PLS.mosek(N, TT, y, X, K, lambda, beta0 = NULL, R = 500, tol = 1e-04,
+  post_est = TRUE, bias_corr = TRUE)
 }
 \arguments{
 \item{N}{individual dimension}
@@ -19,11 +20,11 @@ PLS.mosek(N, TT, y, X, K, lambda, R, tol = 1e-04)
 
 \item{lambda}{Tuning variable}
 
+\item{beta0}{N*p matrix. initial estimator}
+
 \item{R}{Maximum # of iteration}
 
 \item{tol}{convergence criterion}
-
-\item{beta0}{N*p matrix. initial estimator}
 }
 \value{
 A list contains estimated coeffcients and group struncture

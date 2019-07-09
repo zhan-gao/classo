@@ -4,7 +4,8 @@
 \alias{PLS.cvxr}
 \title{PLS estimation by the iterative algorithm via CVXR}
 \usage{
-PLS.cvxr(N, TT, y, X, K, lambda, R, tol = 1e-04, solver = "ECOS")
+PLS.cvxr(N, TT, y, X, K, lambda, beta0 = NULL, R = 500, tol = 1e-04,
+  solver = "ECOS", post_est = TRUE, bias_corr = TRUE)
 }
 \arguments{
 \item{N}{individual dimension}
@@ -18,6 +19,8 @@ PLS.cvxr(N, TT, y, X, K, lambda, R, tol = 1e-04, solver = "ECOS")
 \item{K}{number of groups}
 
 \item{lambda}{Tuning variable}
+
+\item{beta0}{N*p matrix. initial estimator}
 
 \item{R}{Maximum # of iteration}
 

@@ -16,7 +16,6 @@ Depends:
     SparseM,
     Matrix
 Imports: 
-    reticulate,
     robustHD
 Suggests: 
     CVXR,

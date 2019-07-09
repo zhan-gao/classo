@@ -19,5 +19,8 @@ Imports:
     reticulate,
     robustHD
 Suggests: 
-    CVXR
+    CVXR,
+    knitr,
+    rmarkdown
 RoxygenNote: 6.1.1
+VignetteBuilder: knitr

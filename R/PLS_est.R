@@ -9,6 +9,8 @@
 #' @param beta0 N*p matrix. initial estimator
 #' @param R Maximum # of iteration
 #' @param tol convergence criterion
+#' @param post_est A boolean: do post-lasso estimation or not
+#' @param bias_corr A boolean: do bias correction in the post-lasso estimation or not
 #'
 #' @return A list contains estimated coeffcients and group struncture
 #' \item{b.est}{N * p matrix containing estimated slope for each individual}

@@ -27,6 +27,10 @@ PLS.cvxr(N, TT, y, X, K, lambda, beta0 = NULL, R = 500, tol = 1e-04,
 \item{tol}{convergence criterion}
 
 \item{solver}{"ECOS" or "MOSEK"}
+
+\item{post_est}{A boolean: do post-lasso estimation or not}
+
+\item{bias_corr}{A boolean: do bias correction in the post-lasso estimation or not}
 }
 \value{
 A list contains estimated coeffcients and group struncture

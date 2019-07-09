@@ -1,12 +1,14 @@
 Package: classo
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
+Title: Classifier-Lasso developed by Su, Shi and Phillips (2016)
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Zhan", "Gao", email = "zhangao@usc.edu", role = c("aut", "cre")),
+    person("Zhentao", "Shi", email = "zhentaoshi@cuhk.edu.hk", role = "aut"))
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+License: MIT
 Encoding: UTF-8
 LazyData: true
 Depends: 

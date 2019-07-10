@@ -5,7 +5,7 @@
 \title{PLS estimation by the iterative algorithm via CVXR}
 \usage{
 PLS.cvxr(N, TT, y, X, K, lambda, beta0 = NULL, R = 500, tol = 1e-04,
-  solver = "ECOS", post_est = TRUE, bias_corr = TRUE)
+  solver = "ECOS", post_est = TRUE, bias_corr = FALSE)
 }
 \arguments{
 \item{N}{individual dimension}
@@ -26,7 +26,7 @@ PLS.cvxr(N, TT, y, X, K, lambda, beta0 = NULL, R = 500, tol = 1e-04,
 
 \item{tol}{convergence criterion}
 
-\item{solver}{"ECOS" or "MOSEK"}
+\item{solver}{'ECOS' or 'MOSEK'}
 
 \item{post_est}{A boolean: do post-lasso estimation or not}
 

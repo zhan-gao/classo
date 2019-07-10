@@ -53,8 +53,8 @@ pls_out$a.out
 ```R
 # Estimated group structure
 # True group structure:
-#	group 2: 1 - 60
-#   group 1: 61 - 120
+# 	group 2: 1 - 60
+# 	group 1: 61 - 120
 # 	group 3: 121 - 200
 pls_out$group.est
 ```

@@ -5,7 +5,7 @@
 \title{PLS estimation by the iterative algorithm via Rmosek}
 \usage{
 PLS.mosek(N, TT, y, X, K, lambda, beta0 = NULL, R = 500, tol = 1e-04,
-  post_est = TRUE, bias_corr = TRUE)
+  post_est = TRUE, bias_corr = FALSE)
 }
 \arguments{
 \item{N}{individual dimension}

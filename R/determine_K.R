@@ -79,7 +79,7 @@ determine_K <- function(N,
 
                 group_k <- (pls_out$group.est == k)
 
-                if(sum(group_k) >= 2*p/TT){
+                if(sum(group_k) > 2*p/TT){
 
                     Ind <- 1:N
                     group_ind <- Ind[group_k]

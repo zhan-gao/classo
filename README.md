@@ -1,25 +1,29 @@
-# classo
+# Classifier-Lasso
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-This is the package implements Classifier-Lasso developed in the following paper.
+This package implements in R the Classifier-Lasso method by
 
-[Su, L., Shi, Z., & Phillips, P. C. (2016). Identifying latent structures in panel data. *Econometrica*, *84*(6), 2215-2264.](https://onlinelibrary.wiley.com/doi/abs/10.3982/ECTA12560)
-
-An accompanying note focused on the computation details: [Two Examples of Convex-Programming-Based High-Dimensional Econometric Estimators](https://arxiv.org/abs/1806.10423) and illustration example code hosted on https://github.com/zhan-gao/convex_prog_in_econometrics .
+Su, L., Shi, Z., & Phillips, P. C. (2016): ["Identifying latent structures in panel data"](https://onlinelibrary.wiley.com/doi/abs/10.3982/ECTA12560),  *Econometrica*, *84*(6), 2215-2264.
 
 
 
-The package is still under active development...
+*This package is under active development...*
+
+
+
+Code of the classifier-Lasso method was originally developed in `MATLAB` using `CVX` as the modeling language and `MOSEK` as the convex solver. Here is [replicable empirical examples](https://zhentaoshi.github.io/C-Lasso) in the paper. 
+
+To speed up the computation, an R version using `Rmosek` to directly invoke `MOSEK` is elaborated in ["Two Examples of Convex-Programming-Based High-Dimensional Econometric Estimators"](https://arxiv.org/abs/1806.10423) with [demonstration code](https://github.com/zhan-gao/convex_prog_in_econometrics). In our experiments, this `R+Rmosek` implementation often solves the optimization problem with at most 1/3 of the time by the `MATLAB+CVX+MOSEK` implementation.
+
+
 
 ## Installation
 
-This package is dependent on [Rmosek](https://cran.r-project.org/web/packages/Rmosek/index.html). An installation gist can be found at [here](https://gist.github.com/mikelove/67ea44d5be5a053e599257fe357483dc ). Please make sure `Rmosek` is successfully installed and activated before install this package.
+This package is dependent on [`Rmosek`](https://cran.r-project.org/web/packages/Rmosek/index.html). An installation gist can be found at [here](https://gist.github.com/mikelove/67ea44d5be5a053e599257fe357483dc ). *Please make sure `Rmosek` is successfully installed and activated before install this package*. In later versions, we will relax this restriction to allow users use an open source solver via [CVXR](https://github.com/anqif/CVXR) and make `Rmosek` as an option.
 
-In later versions, we will relax this restriction to allow users use an open source solver via [CVXR](https://github.com/anqif/CVXR) and make `Rmosek` as an option.
-
-You can install the development version of classo from [Github](https://CRAN.R-project.org) with:
+The current beta version can be installed from [Github](https://CRAN.R-project.org) by:
 
 ``` r
 library(devtools)

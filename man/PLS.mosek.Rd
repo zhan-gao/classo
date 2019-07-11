@@ -18,11 +18,11 @@ PLS.mosek(N, TT, y, X, K, lambda, beta0 = NULL, R = 500, tol = 1e-04,
 
 \item{K}{number of groups}
 
-\item{lambda}{Tuning variable}
+\item{lambda}{Tuning parameter}
 
 \item{beta0}{N*p matrix. initial estimator}
 
-\item{R}{Maximum # of iteration}
+\item{R}{Maximum number of iteration}
 
 \item{tol}{convergence criterion}
 
@@ -31,7 +31,7 @@ PLS.mosek(N, TT, y, X, K, lambda, beta0 = NULL, R = 500, tol = 1e-04,
 \item{bias_corr}{A boolean: do bias correction in the post-lasso estimation or not}
 }
 \value{
-A list contains estimated coeffcients and group struncture
+A list contains estimated coefficients and group struncture
 \item{b.est}{N * p matrix containing estimated slope for each individual}
 \item{a.out}{K * p matrix containing estimated slope for each group}
 \item{group.est}{group_id for each individual}

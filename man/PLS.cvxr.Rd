@@ -18,11 +18,11 @@ PLS.cvxr(N, TT, y, X, K, lambda, beta0 = NULL, R = 500, tol = 1e-04,
 
 \item{K}{number of groups}
 
-\item{lambda}{Tuning variable}
+\item{lambda}{Tuning parameter}
 
 \item{beta0}{N*p matrix. initial estimator}
 
-\item{R}{Maximum # of iteration}
+\item{R}{Maximum number of iteration}
 
 \item{tol}{convergence criterion}
 

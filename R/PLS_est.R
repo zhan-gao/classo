@@ -1,19 +1,19 @@
 #' PLS estimation by the iterative algorithm via Rmosek
 #'
-#' @param N individual dimension
-#' @param TT time dimension
-#' @param y y(TN * 1)
-#' @param X X(TN * P)
-#' @param K number of groups
-#' @param lambda Tuning parameter
-#' @param beta0 N*p matrix. initial estimator
-#' @param R Maximum number of iteration
-#' @param tol convergence criterion
-#' @param post_est A boolean: do post-lasso estimation or not
-#' @param bias_corr A boolean: do bias correction in the post-lasso estimation or not
+#' @param N The dimension of cross-sectional units in the panel.
+#' @param TT The time series dimension in the panel.
+#' @param y Dependent variable. (TN * 1). T is the fast index.
+#' @param X Independent variable. (TN * P). T is the fast index. P is the number of regressors.
+#' @param K The number of groups.
+#' @param lambda The tuning parameter.
+#' @param beta0 N*p matrix. The initial estimator for each i=1,...,N.
+#' @param R Maximum number of iteration.
+#' @param tol Tolerance level in the convergence criterion.
+#' @param post_est A boolean: do post-lasso estimation or not.
+#' @param bias_corr A boolean: do bias correction in the post-lasso estimation or not.
 #'
 #' @return A list contains estimated coefficients and group struncture
-#' \item{b.est}{N * p matrix containing estimated slope for each individual}
+#' \item{b.est}{N * p matrix containing estimated slope for each cross-sectional unit.}
 #' \item{a.out}{K * p matrix containing estimated slope for each group}
 #' \item{group.est}{group_id for each individual}
 #' \item{converge}{A boolean indicating whether convergence criteria is met }

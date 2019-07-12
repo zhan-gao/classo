@@ -1,6 +1,6 @@
 Package: classo
 Type: Package
-Title: Classifier-Lasso developed by Su, Shi and Phillips (2016)
+Title: Classifier-Lasso for Panel Data Grouping
 Version: 0.0.0.9000
 Authors@R: c(
     person("Zhan", "Gao", email = "zhangao@usc.edu", role = c("aut", "cre")),

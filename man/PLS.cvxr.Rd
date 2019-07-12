@@ -8,29 +8,29 @@ PLS.cvxr(N, TT, y, X, K, lambda, beta0 = NULL, R = 500, tol = 1e-04,
   solver = "ECOS", post_est = TRUE, bias_corr = FALSE)
 }
 \arguments{
-\item{N}{individual dimension}
+\item{N}{The dimension of cross-sectional units in the panel.}
 
-\item{TT}{time dimension}
+\item{TT}{The time series dimension in the panel.}
 
-\item{y}{y(TN * 1)}
+\item{y}{Dependent variable. (TN * 1). T is the fast index.}
 
-\item{X}{X(TN * P)}
+\item{X}{Independent variable. (TN * P). T is the fast index. P is the number of regressors.}
 
-\item{K}{number of groups}
+\item{K}{The number of groups.}
 
-\item{lambda}{Tuning parameter}
+\item{lambda}{The tuning parameter.}
 
-\item{beta0}{N*p matrix. initial estimator}
+\item{beta0}{N*p matrix. The initial estimator for each i=1,...,N.}
 
-\item{R}{Maximum number of iteration}
+\item{R}{Maximum number of iteration.}
 
-\item{tol}{convergence criterion}
+\item{tol}{Tolerance level in the convergence criterion.}
 
 \item{solver}{'ECOS' or 'MOSEK'}
 
-\item{post_est}{A boolean: do post-lasso estimation or not}
+\item{post_est}{A boolean: do post-lasso estimation or not.}
 
-\item{bias_corr}{A boolean: do bias correction in the post-lasso estimation or not}
+\item{bias_corr}{A boolean: do bias correction in the post-lasso estimation or not.}
 }
 \value{
 A list contains estimated coeffcients and group struncture

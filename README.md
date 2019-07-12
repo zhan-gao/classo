@@ -21,7 +21,7 @@ To speed up the computation, an R version using `Rmosek` to directly invoke `MOS
 
 ## Installation
 
-This package is dependent on [`Rmosek`](https://cran.r-project.org/web/packages/Rmosek/index.html). An installation gist can be found at [here](https://gist.github.com/mikelove/67ea44d5be5a053e599257fe357483dc ). *Please make sure `Rmosek` is successfully installed and activated before install this package*. In later versions, we will relax this restriction to allow users use an open source solver via [CVXR](https://github.com/anqif/CVXR) and make `Rmosek` as an option.
+This package is dependent on `Rmosek`. An installation gist can be found at [here](https://gist.github.com/mikelove/67ea44d5be5a053e599257fe357483dc ). The installation of the latest version `MOSEK 9.0` includes `Rmosek` and it can be invoked in `R` following [this instruction](<https://docs.mosek.com/9.0/rmosek/install-interface.html>) (Tested. Successful). *Please make sure `Rmosek` is successfully installed and activated before install this package*. In later versions, we will relax this restriction to allow users use an open source solver via [CVXR](https://github.com/anqif/CVXR) and make `Rmosek` as an option.
 
 The current beta version can be installed from [Github](https://CRAN.R-project.org) by:
 

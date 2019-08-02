@@ -2,6 +2,7 @@
 
 export(PLS.cvxr)
 export(PLS.mosek)
+export(PLS.nlopt)
 export(SPJ_PLS)
 export(data.normalization)
 export(demean)

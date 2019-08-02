@@ -9,6 +9,7 @@
 #' @param lambda_seq Candidate tuning variable
 #' @param K_max Maximum number of groups
 #' @param rho Tuning parameter in the IC
+#' @param FUN choose which function to be used in PLS estimation
 #' @param beta0 N*p matrix. initial estimator
 #' @param MaxIter Maximum # of iteration
 #' @param tol convergence criterion
@@ -28,6 +29,7 @@ determine_K <- function(N,
                         lambda_seq,
                         K_max,
                         rho = 2 / 3 * (N * TT)^(-0.5),
+                        FUN = PLS.cvxr,
                         beta0 = NULL,
                         MaxIter = 500,
                         tol = 1e-4) {
@@ -60,17 +62,17 @@ determine_K <- function(N,
                 next
             }
 
-            pls_out <- PLS.mosek(N,
-                                 TT,
-                                 y,
-                                 X,
-                                 K,
-                                 lambda,
-                                 beta0 = beta0,
-                                 R = MaxIter,
-                                 tol = tol,
-                                 post_est = FALSE,
-                                 bias_corr = FALSE)
+            pls_out <- FUN(N,
+                           TT,
+                           y,
+                           X,
+                           K,
+                           lambda,
+                           beta0 = beta0,
+                           R = MaxIter,
+                           tol = tol,
+                           post_est = FALSE,
+                           bias_corr = FALSE)
 
             Q <- rep(1e10, K)
 

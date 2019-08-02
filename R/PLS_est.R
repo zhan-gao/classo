@@ -507,7 +507,7 @@ post.lasso <- function(group.est, a.out, y, X, K, p, N, TT) {
             data.ind <- as.numeric(sapply(group.ind, function(i) {
                 ((i - 1) * TT + 1):(i * TT)
             }))
-            yy <- y[data.ind, ]
+            yy <- y[data.ind]
             XX <- X[data.ind, ]
 
             a.out.post[k, ] <- lsfit(XX, yy, intercept = FALSE)$coefficients
@@ -535,7 +535,7 @@ post.corr <- function(group.est, a.out, y, X, K, p, N, TT) {
             data.ind <- as.numeric(sapply(group.ind, function(i) {
                 ((i - 1) * TT + 1):(i * TT)
             }))
-            yy <- y[data.ind, ]
+            yy <- y[data.ind]
             XX <- X[data.ind, ]
 
             bias.k <- SPJ_PLS(TT, yy, XX)

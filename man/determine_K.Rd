@@ -5,7 +5,8 @@
 \title{Determine number of groups using information criterion}
 \usage{
 determine_K(N, TT, y, X, y_raw, X_raw, lambda_seq, K_max, rho = 2/3 * (N
-  * TT)^(-0.5), beta0 = NULL, MaxIter = 500, tol = 1e-04)
+  * TT)^(-0.5), FUN = PLS.cvxr, beta0 = NULL, MaxIter = 500,
+  tol = 1e-04)
 }
 \arguments{
 \item{N}{individual dimension}
@@ -25,6 +26,8 @@ determine_K(N, TT, y, X, y_raw, X_raw, lambda_seq, K_max, rho = 2/3 * (N
 \item{K_max}{Maximum number of groups}
 
 \item{rho}{Tuning parameter in the IC}
+
+\item{FUN}{choose which function to be used in PLS estimation}
 
 \item{beta0}{N*p matrix. initial estimator}
 

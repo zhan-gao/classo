@@ -17,7 +17,7 @@ Code of the classifier-Lasso method was originally developed in `MATLAB` using `
 
 The package uses an open source solver  [ECOS](https://github.com/embotech/ecos) via [CVXR](https://github.com/anqif/CVXR) by default. We skipped the Disciplined Convex Programming (DCP) check steps to speed up the optimization.
 
-To further speed up the computation, an R version using `Rmosek` to directly invoke `MOSEK` is elaborated in ["Two Examples of Convex-Programming-Based High-Dimensional Econometric Estimators"](https://arxiv.org/abs/1806.10423) with [demonstration code](https://github.com/zhan-gao/convex_prog_in_econometrics). In our experiments, this `R+Rmosek` implementation often solves the optimization problem with at most 1/3 of the time by the `MATLAB+CVX+MOSEK` implementation and at most 2/3 of the time by `CVXR+ECOS` implementation without DCP check.
+To further speed up the computation, an R version using `Rmosek` to directly invoke `MOSEK` is elaborated in ["Implementing Convex Optimization in R: Two Econometric Examples"](https://www.researchgate.net/publication/326029597_Implementing_Convex_Optimization_in_R_Two_Econometric_Examples) with [demonstration code](https://github.com/zhan-gao/convex_prog_in_econometrics). In our experiments, this `R+Rmosek` implementation often solves the optimization problem with at most 1/3 of the time by the `MATLAB+CVX+MOSEK` implementation and at most 2/3 of the time by `CVXR+ECOS` implementation without DCP check.
 
 
 

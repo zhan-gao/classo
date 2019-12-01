@@ -404,7 +404,8 @@ opt.mosek <- function(y, X, penalty, N, TT, K, p, lambda) {
 
     # set sense of optim and tolerance
     prob <- list(sense = "min")
-    prob$dparam$intpnt_nl_tol_rel_gap <- 1e-05
+    prob$dparam <- list(INTPNT_CO_TOL_REL_GAP=1e-5)
+    # prob$dparam$intpnt_nl_tol_rel_gap <- 1e-05
 
     # objective: coeffiects c order of variables: beta_i (i = 1,2,..N),
     # nu_i (i=1,2,...,N) , mu_i (i=1,2,...,N) alpha_k, s_i (i=1,2,...,N),

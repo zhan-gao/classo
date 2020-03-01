@@ -5,7 +5,7 @@ Version: 0.0.0.9100
 Authors@R: c(
     person("Zhan", "Gao", email = "zhangao@usc.edu", role = c("aut", "cre")),
     person("Zhentao", "Shi", email = "zhentaoshi@cuhk.edu.hk", role = "aut"))
-Maintainer: The package maintainer <yourself@somewhere.net>
+Maintainer: Zhan Gao <zhangao@usc.edu>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: MIT
@@ -14,7 +14,6 @@ LazyData: true
 Depends:
     SparseM,
     Matrix,
-    nloptr,
     CVXR
 Imports: 
     robustHD

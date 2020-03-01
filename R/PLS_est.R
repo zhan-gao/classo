@@ -93,7 +93,7 @@ PLS.mosek <- function(N, TT, y, X, K, lambda, beta0 = NULL, R = 500,
     return(result)
 }
 
-#' PLS estimation by the iterative algorithm via CVXR
+#' PLS estimation by the iterative algorithm via CVXR + ECOS
 #'
 #' @inheritParams PLS.mosek
 #'
@@ -107,7 +107,7 @@ PLS.mosek <- function(N, TT, y, X, K, lambda, beta0 = NULL, R = 500,
 #'
 
 PLS.cvxr <- function(N, TT, y, X, K, lambda, beta0 = NULL, R = 500, tol = 1e-04,
-                     post_est = TRUE, bias_corr = FALSE) {
+                     post_est = TRUE, bias_corr = FALSE, solver = "ECOS") {
 
     p <- dim(X)[2]
 
@@ -145,7 +145,7 @@ PLS.cvxr <- function(N, TT, y, X, K, lambda, beta0 = NULL, R = 500, tol = 1e-04,
             b = Variable(p, N)
             a = Variable(p)
             A <- matrix(1, nrow = 1, ncol = N)
-            obj1 <- norm2(b - a %*% A, axis = 2) %*% gamma
+            obj1 <- t(norm2(b - a %*% A, axis = 2)) %*% gamma
             ## End Code added
 
             XX = bdiag(X.list)
@@ -161,21 +161,30 @@ PLS.cvxr <- function(N, TT, y, X, K, lambda, beta0 = NULL, R = 500, tol = 1e-04,
 
 
             prob_data <- get_problem_data(Prob, solver = "ECOS")
-            solver_output <- ECOSolveR::ECOS_csolve(c = prob_data[["c"]],
-                                                    G = prob_data[["G"]],
-                                                    h = prob_data[["h"]],
-                                                    dims = prob_data[["dims"]],
-                                                    A = prob_data[["A"]],
-                                                    b = prob_data[["b"]])
-            direct_soln <- unpack_results(Prob, "ECOS", solver_output)
+            if (packageVersion("CVXR") > "0.99-7") {
+                ECOS_dims <- ECOS.dims_to_solver_dict(prob_data$data[["dims"]])
+            } else {
+                ECOS_dims <- prob_data$data[["dims"]]
+            }
+            solver_output <- ECOSolveR::ECOS_csolve(c = prob_data$data[["c"]],
+                                                    G = prob_data$data[["G"]],
+                                                    h = prob_data$data[["h"]],
+                                                    dims = ECOS_dims,
+                                                    A = prob_data$data[["A"]],
+                                                    b = prob_data$data[["b"]])
 
-            # cvxr.out = solve(Prob, solver = solver)
-
-            # a.out[k, ] = cvxr.out$getValue(a)
-            # b.out[, , k] = matrix(cvxr.out$getValue(b), N, p, byrow = TRUE)
+            if (packageVersion("CVXR") > "0.99-7") {
+                direct_soln <- unpack_results(Prob, solver_output, prob_data$chain, prob_data$inverse_data)
+            } else {
+                direct_soln <- unpack_results(Prob, "ECOS", solver_output)
+            }
 
             a.out[k, ] = direct_soln$getValue(a)
             b.out[, , k] = matrix(direct_soln$getValue(b), N, p, byrow = TRUE)
+
+            # cvxr.out = solve(Prob, solver = solver)
+            # a.out[k, ] = cvxr.out$getValue(a)
+            # b.out[, , k] = matrix(cvxr.out$getValue(b), N, p, byrow = TRUE)
 
         }
 
@@ -412,7 +421,7 @@ opt.mosek <- function(y, X, penalty, N, TT, K, p, lambda) {
     # r_i (i=1,2,...,N), t_i (i=1,2,...,N), w_i (i=1,2,...,N)
 
     prob$c <- c(rep(0, N * (2 * p + TT + 2) + p), rep(1/(N * TT), N),
-        penalty * lambda/N)
+        penalty * c(lambda/N))
 
     # lieanr constraint: matrix A
 

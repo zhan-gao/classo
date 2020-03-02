@@ -107,7 +107,7 @@ PLS.mosek <- function(N, TT, y, X, K, lambda, beta0 = NULL, R = 500,
 #'
 
 PLS.cvxr <- function(N, TT, y, X, K, lambda, beta0 = NULL, R = 500, tol = 1e-04,
-                     post_est = TRUE, bias_corr = FALSE, solver = "ECOS") {
+                     post_est = TRUE, bias_corr = FALSE) {
 
     p <- dim(X)[2]
 
@@ -229,6 +229,121 @@ PLS.cvxr <- function(N, TT, y, X, K, lambda, beta0 = NULL, R = 500, tol = 1e-04,
 
     return(result)
 }
+
+
+#' PLS estimation by the iterative algorithm via CVXR with user solver
+#'
+#' @inheritParams PLS.cvxr
+#'
+#' @return A list contains estimated coeffcients and group struncture
+#' \item{b.est}{N * p matrix containing estimated slope for each individual}
+#' \item{a.out}{K * p matrix containing estimated slope for each group}
+#' \item{group.est}{group_id for each individual}
+#' \item{converge}{A boolean indicating whether convergence criteria is met }
+#'
+#' @export
+#'
+
+PLS.cvxr.solver <- function(N, TT, y, X, K, lambda, beta0 = NULL, R = 500, tol = 1e-04,
+                     post_est = TRUE, bias_corr = FALSE, solver = "ECOS") {
+
+    p <- dim(X)[2]
+
+    if (is.null(beta0)) {
+        # Use individual regression result as the initial value
+        beta0 <- init_est(X, y, TT)
+    }
+
+    b.out <- array(beta0, c(N, p, K))
+    a.out <- matrix(0, K, p)
+
+    b.old <- matrix(1, N, p)
+    a.old <- matrix(1, 1, p)
+
+    for (r in 1:R) {
+
+        for (k in 1:K) {
+
+            # N * 1: consider it as gamma
+            gamma <- pen.generate(b.out, a.out, N, p, K, k)
+
+            # Commented out: Suggested by Dr. Narasimhan b = Variable(N*p) a =
+            # Variable(p) obj = 0 End Commented out
+
+            X.list = list()
+            for (i in 1:N) {
+                ind = ((i - 1) * TT + 1):(i * TT)
+                id = ((i - 1) * p + 1):(i * p)
+                X.list[[i]] = X[ind, ]
+                # Commented out: Suggested by Dr. Narasimhan obj = obj + gamma[i] *
+                # norm2( b[id] - a ) End Commented out
+            }
+
+            ## Code added
+            b = Variable(p, N)
+            a = Variable(p)
+            A <- matrix(1, nrow = 1, ncol = N)
+            obj1 <- t(norm2(b - a %*% A, axis = 2)) %*% gamma
+            ## End Code added
+
+            XX = bdiag(X.list)
+
+            ## Original commented out obj = Minimize( sum_squares(y - XX %*% b)/(N
+            ## * TT) + obj*(lambda/N) ) End Original commented out
+
+            ## Code added and modified
+            obj = Minimize(sum_squares(y - XX %*% vec(b))/(N * TT) +
+                               obj1 * (lambda/N))
+            ## End Code added and modified
+            Prob = Problem(obj)
+
+            cvxr.out = solve(Prob, solver = solver)
+            a.out[k, ] = cvxr.out$getValue(a)
+            b.out[, , k] = matrix(cvxr.out$getValue(b), N, p, byrow = TRUE)
+        }
+
+        # Check the convergence criterion
+        a.new <- a.out[K, ]
+        b.new <- b.out[, , K]
+
+        if (criterion(a.old, a.new, b.old, b.new, tol)) {
+            break
+        }
+        # Update
+        a.old <- a.out[K, ]
+        b.old <- b.out[, , K]
+    }
+
+    # put b.out to nearest a.out and get the group estimation
+
+    a.out.exp <- aperm(array(a.out, c(K, p, N)), c(3, 2, 1))
+    d.temp <- (b.out - a.out.exp)^2
+    dist <- sqrt(apply(d.temp, c(1, 3), sum))
+    group.est <- apply(dist, 1, which.min)
+
+
+    # Post estimation
+    if (post_est) {
+        if (bias_corr) {
+            a.out <- post.corr(group.est, a.out, y, X, K, p, N, TT)
+        } else {
+            a.out <- post.lasso(group.est, a.out, y, X, K, p, N, TT)
+        }
+    }
+
+
+    b.est <- matrix(999, N, p)
+    for (i in 1:N) {
+        group <- group.est[i]
+        b.est[i, ] <- a.out[group, ]
+    }
+
+    result <- list(b.est = b.est, a.out = a.out, group.est = group.est,
+                   converge = (r < R))
+
+    return(result)
+}
+
 
 #' PLS estimation by the iterative algorithm via NLOPTR
 #'

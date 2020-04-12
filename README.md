@@ -30,6 +30,7 @@ The current beta version can be installed from [Github](https://CRAN.R-project.o
 ``` r
 library(devtools)
 devtools::install_github("zhan-gao/classo", INSTALL_opts=c("--no-multiarch"))
+library(classo)
 ```
 
 ## Examples

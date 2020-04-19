@@ -25,7 +25,7 @@ To further speed up the computation, an R version using `Rmosek` to directly inv
 
 The current beta version can be installed from [Github](https://CRAN.R-project.org) by:
 
-```{r}
+``` r
 library(devtools)
 devtools::install_github("zhan-gao/classo", INSTALL_opts=c("--no-multiarch"))
 library(classo)
@@ -38,7 +38,7 @@ The installation of the latest version `MOSEK 9.0` includes `Rmosek`. It can be 
 
 Alternatively, `Rmosek` can be downloaded from CRAN. We have tested with success on R 3.6.3 the following lines:
 
-```{r}
+``` r
 install.packages("Rmosek")
 library(Rmosek)
 mosek_attachbuilder("path_to_the_bin_folder_of_MOSEK")

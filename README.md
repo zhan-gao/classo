@@ -23,15 +23,29 @@ To further speed up the computation, an R version using `Rmosek` to directly inv
 
 ## Installation
 
-Though not required for installation and use, `Rmosek` is highly recommended. An installation gist can be found at [here](https://gist.github.com/mikelove/67ea44d5be5a053e599257fe357483dc ). The installation of the latest version `MOSEK 9.0` includes `Rmosek` and it can be invoked in `R` following [this instruction](<https://docs.mosek.com/9.0/rmosek/install-interface.html>) (Tested. Successful). *Please make sure `Rmosek` is successfully installed and activated before use `PLS.mosek()` function to do estimation*. 
-
 The current beta version can be installed from [Github](https://CRAN.R-project.org) by:
 
-``` r
+```{r}
 library(devtools)
 devtools::install_github("zhan-gao/classo", INSTALL_opts=c("--no-multiarch"))
 library(classo)
 ```
+
+Though not required for installation and use, `Rmosek` is highly recommended. According to our extensive experience, using `Rmosek` is often much faster than R with other solvers. 
+
+An installation gist of `MOSEK` can be found at [here](https://gist.github.com/mikelove/67ea44d5be5a053e599257fe357483dc ).
+The installation of the latest version `MOSEK 9.0` includes `Rmosek`. It can be invoked in `R` following [this instruction](<https://docs.mosek.com/9.0/rmosek/install-interface.html>) (Tested with success).
+
+Alternatively, `Rmosek` can be downloaded from CRAN. We have tested with success on R 3.6.3 the following lines:
+
+```{r}
+install.packages("Rmosek")
+library(Rmosek)
+mosek_attachbuilder("path_to_the_bin_folder_of_MOSEK")
+install.rmosek()
+``` 
+
+ *Please make sure `Rmosek` is successfully installed and activated before use `PLS.mosek()` function to do estimation*. 
 
 ## Examples
 

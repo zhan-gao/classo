@@ -13,6 +13,7 @@ Encoding: UTF-8
 LazyData: true
 Depends:
     SparseM,
+    MASS,
     Matrix,
     CVXR
 Imports: 
